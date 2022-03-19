@@ -5,6 +5,7 @@ class Form extends Component {
   static defaultProps = {
     onClose() {},
     onSave() {}
+    
   }
   
   constructor(props) {
