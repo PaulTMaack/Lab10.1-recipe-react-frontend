@@ -4,25 +4,7 @@ const APIURL = '/api/recipes/';
 export async function getRecipes() {
 
   return fetch(APIURL)
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      }
-      else {
-        if (!response.ok) {
-          if (response.status >= 400 && response.status < 500) {
-            return response.json().then(data => {
-              let err = { errorMessage: data.message };
-              throw err;
-            })
-          }
-          else {
-            let err = { errorMessage: 'Please try again later, server is not responding' };
-            throw err;
-          }
-        }
-      }
-    })
+  .then(resp => writeError())
   }
 
   export async function createRecipe(recipe) {
@@ -33,20 +15,7 @@ export async function getRecipes() {
       }),
       body: JSON.stringify(recipe)
     })
-      .then(resp => {
-        if (!resp.ok) {
-          if (resp.status >= 400 && resp.status < 500) {
-            return resp.json().then(data => {
-              let err = { errorMessage: data.message };
-              throw err;
-            })
-          } else {
-            let err = { errorMessage: 'Please try again later, server is not responding' };
-            throw err;
-          }
-        }
-        return resp.json();
-      })
+    .then(resp => writeError())
   }
   
   export async function removeRecipe(id) {
@@ -54,10 +23,12 @@ export async function getRecipes() {
     return fetch(deleteURL, {
       method: 'delete'
     })
-      .then(resp => {
-        if (!resp.ok) {
-          if (resp.status >= 400 && resp.status < 500) {
-            return resp.json().then(data => {
+      .then(resp => writeError())
+  }
+  export async function writeError(props){
+     if (!props.ok) {
+          if (props.status >= 400 && props.status < 500) {
+            return props.json().then(data => {
               let err = { errorMessage: data.message };
               throw err;
             })
@@ -66,7 +37,6 @@ export async function getRecipes() {
             throw err;
           }
         }
-        return resp.json();
-      })
-  }
+        return props.json();
+      }
   
